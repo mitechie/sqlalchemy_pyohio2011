@@ -49,6 +49,13 @@ film_actor = Table('film_actor', Base.metadata,
     Column('film_id', Integer, ForeignKey('film.film_id'), primary_key=True)
 )
 
+film_category = Table('film_category', Base.metadata,
+    Column('category_id', Integer, ForeignKey('category.category_id'), primary_key=True),
+    Column('film_id', Integer, ForeignKey('film.film_id'), primary_key=True)
+)
+
+
+
 
 """
 Actor
@@ -66,7 +73,7 @@ class Actor(Base):
     actor_id = Column(Integer, autoincrement=True, primary_key=True)
     first_name = Column(Unicode(45), nullable=False)
     last_name = Column(Unicode(45), nullable=False)
-    last_update = Column(DateTime, default=datetime.now)
+    last_update = Column(DateTime, default=datetime.now, onupdate=datetime.now)
 
 
 """
@@ -84,7 +91,26 @@ class Language(Base):
 
     language_id = Column(Integer, autoincrement=True, primary_key=True)
     name = Column(Unicode(20), nullable=False)
-    last_update = Column(DateTime, default=datetime.now)
+    last_update = Column(DateTime, default=datetime.now, onupdate=datetime.now)
+
+
+"""
+Category
+
+  category_id TINYINT UNSIGNED NOT NULL ,
+  name VARCHAR(25) NOT NULL,
+  last_update TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+
+"""
+class Category(Base):
+    __tablename__ = 'category'
+
+    category_id = Column(Integer, autoincrement=True, primary_key=True)
+    name = Column(Unicode(20), nullable=False)
+    last_update = Column(DateTime, default=datetime.now, onupdate=datetime.now)
+
+
+
 
 """
 Film
@@ -121,9 +147,14 @@ class Film(Base):
     replacement_cost = Column(Float(2), nullable=False, default='19.99')
     rating = Column(Unicode, default=u'G')
     special_features = Column(Unicode)
-    last_update = Column(DateTime, default=datetime.now)
+    last_update = Column(DateTime, default=datetime.now, onupdate=datetime.now)
 
     actors = relation(Actor,
         backref="films",
         secondary=film_actor,
+    )
+
+    categories = relation(Category,
+        backref="films",
+        secondary=film_category,
     )

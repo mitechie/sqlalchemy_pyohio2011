@@ -754,6 +754,61 @@ Relations: list by default, but dicts and sets rule
    PageBreak
 
 
+Relations: many to many action
+===================================
+- Need a central table to tie ids together
+
+.. code-block:: python
+
+    user_address = Table('user_addresses', Base.metadata,
+        Column('user_id', Integer,
+               ForeignKey('users.id'),
+               primary_key=True),
+        Column('address_id', Integer,
+               ForeignKey('addresses.id'),
+               primary_key=True)
+    )
+
+
+.. raw:: pdf
+
+   Transition Dissolve 1
+   PageBreak
+
+
+Relations: many->many cont'd
+===================================
+- Now add the seconday kwarg to the relation
+
+.. code-block:: python
+
+    class User(Base):
+        ...
+        addresses = relation(Address,
+                             backref="user",
+                             seconday=user_address)
+
+
+.. raw:: pdf
+
+   Transition Dissolve 1
+   PageBreak
+
+
+Relations: many->many queries
+================================
+.. code-block:: python
+
+    User.query.filter(
+        User.addresses.any(city='Columbus')).\
+        all()
+
+    rick = User.query.get(13)
+    rick.addresses.filter(
+        User.addresses.any(location='work')).\
+        all()
+
+
 Other tricks: autoload
 ===================================
 - Great for existing dbs, quick scripts, ipython sessions

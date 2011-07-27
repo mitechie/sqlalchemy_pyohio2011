@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 from models import Actor
+from models import Category
 from models import Film
 from models import Language
 
@@ -39,6 +40,11 @@ session.flush()
 ct = Actor.query.count()
 plog("Inserted Rick, New Count: {0} ".format(ct))
 
+session.delete(rick)
+session.flush()
+
+ct = Actor.query.count()
+plog("Deleted Rick, New Count: {0} ".format(ct))
 
 # test the language models
 lg = Language.query.all()
@@ -51,3 +57,11 @@ plog("Actor {0}".format(some_actor.last_name))
 plog("Actor {0} was in {1}".format(
         some_actor.last_name,
         ", ".join([f.title for f in some_actor.films])))
+
+# get the list of categories
+cats = Category.query.all()
+plog("Categories: {0}".format(", ".join([c.name for c in cats])))
+
+travel_id = Category.query.filter(Category.name == "Travel").first()
+travels = Film.query.filter(Film.categories.any(name='Travel')).all()
+plog("Travels: {0}".format(", ".join([t.title for t in travels])))
