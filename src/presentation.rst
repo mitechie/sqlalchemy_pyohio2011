@@ -649,9 +649,11 @@ Relations: Organizing
     class UserMgr(object):
         """All non-instance helps for User class"""
 
+        @staticmethod
         def get_students(since=None):
             ...
 
+        @staticmethod
         def find(email=None):
             qry = User.query
 

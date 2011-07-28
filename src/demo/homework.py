@@ -110,8 +110,8 @@ Homework:
 
 The film table has two references to the language table.
 
-Add a relation for these two columns (langauge_id, original_language_id)
-and then query the films for records where the language and original_lanuage
+Add a relation for these two columns (language_id, original_language_id)
+and then query the films for records where the language and original_language
 are different
 
 Hint: You'll need to add two relations to the Film object
@@ -122,7 +122,7 @@ Hint: You'll need to add two relations to the Film object
 Homework:
 
 Add a FilmMgr class with a method to return a list of the films where the
-language  does not equal the original language. Basically we want to wrap the
+language does not equal the original language. Basically we want to wrap the
 above query into a nice reusable function call
 """
 
