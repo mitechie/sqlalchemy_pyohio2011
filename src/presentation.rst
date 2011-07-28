@@ -7,7 +7,7 @@
 
 SqlAlchemy: A Python ORM
 ========================
-So powerful, if brought me from PHP to Python in a hurry.
+One of the top 5 reasons to use Python
 
 
 - Rick Harding
@@ -555,7 +555,9 @@ Relations: Points of interest
 - Only defined on one side, backref takes care of the rest
 - defaults to lazy load, accessing rick.emails == another query
 
+
 Lots of kwargs!
+---------------
 
 lazy, order_by, post_update, primaryjoin, secondaryjoin, uselist,
 viewonly, secondary, backref, back_populates, cascade, doc,
@@ -808,6 +810,10 @@ Relations: many->many queries
         User.addresses.any(location='work')).\
         all()
 
+.. raw:: pdf
+
+   Transition Dissolve 1
+   PageBreak
 
 Other tricks: autoload
 ===================================
@@ -846,6 +852,31 @@ Other tricks: autoload declarative
 
    Transition Dissolve 1
    PageBreak
+
+
+Other tricks: fitting to an existing db
+========================================
+
+.. code-block:: sql
+
+    create table Users (
+        UserID INTEGER,
+        UserFirstName CHAR(20),
+        UserLastName CHAR(40) 
+    )
+
+    class User(Base):
+        ...
+        id = Column('UserID', Integer, primary_key=True)
+        fname = Column('UserFirstName', Unicode(20))
+        lname = Column('UserLastName', Unicode(40)
+
+.. raw:: pdf
+
+   Transition Dissolve 1
+   PageBreak
+
+
 
 Other tricks: Events!
 ===================================
@@ -951,6 +982,20 @@ Show Off: cont'd
     query = query.filter(Tag.name.startswith(prefix))
 
     return Session.execute(query)
+
+.. raw:: pdf
+
+   Transition Dissolve 1
+   PageBreak
+
+
+Homework! Demo directory
+===================================
+- sample database movies.db (sqlite)
+- sakila-schema.sql - schema def (stolen from MySQL sample code thanks!)
+- models.py - all the SqlAlchemy definitions
+- homework.py - comment blocks, each with an assignment
+- test.py (ignore, no answers within)
 
 .. raw:: pdf
 

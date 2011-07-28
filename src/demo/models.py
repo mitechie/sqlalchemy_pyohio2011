@@ -110,8 +110,6 @@ class Category(Base):
     last_update = Column(DateTime, default=datetime.now, onupdate=datetime.now)
 
 
-
-
 """
 Film
 
