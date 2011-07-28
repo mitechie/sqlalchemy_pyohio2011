@@ -1005,3 +1005,23 @@ Homework! Demo directory
    PageBreak
 
 
+Reading Notes/Material
+===================================
+Philosophy: object relational impedance mismatch
+---------------------------------------
+http://paste.ofcode.org/StxVZ8hfdhPhbbLAvq53rb
+
+great reply from Mike Bayer on SqlAlchemy
+-------------------------------------------
+https://plus.google.com/109591387819364984777/posts/DNHcVxyP8Gs
+
+SqlAlchemy for Django users
+----------------------------
+Thanks Armin!
+http://lucumr.pocoo.org/2011/7/19/sqlachemy-and-you/
+
+
+.. raw:: pdf
+
+  Transition Dissolve 1
+  PageBreak
