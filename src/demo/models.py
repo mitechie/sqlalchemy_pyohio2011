@@ -32,30 +32,24 @@ Base = declarative_base()
 Base = declarative_base()
 Base.metadata.bind = engine
 
-# turns docs Session.query(User) into User.query
+# turns Session.query(User) into User.query
 Base.query = Session.query_property(Query)
 
 # create a Session
 session = Session()
 
-"""
-Actors and Films are a many->many
-
-To build this we need a central table to hold references to each
-
-"""
+# Actors and Films are a many->many
+# To build this we need a central table to hold references to each
 film_actor = Table('film_actor', Base.metadata,
     Column('actor_id', Integer, ForeignKey('actor.actor_id'), primary_key=True),
     Column('film_id', Integer, ForeignKey('film.film_id'), primary_key=True)
 )
 
+# The Film/Category relationship works the same way
 film_category = Table('film_category', Base.metadata,
     Column('category_id', Integer, ForeignKey('category.category_id'), primary_key=True),
     Column('film_id', Integer, ForeignKey('film.film_id'), primary_key=True)
 )
-
-
-
 
 """
 Actor
@@ -76,8 +70,29 @@ class Actor(Base):
     last_update = Column(DateTime, default=datetime.now, onupdate=datetime.now)
 
 
+class ActorMgr(object):
+    """Handling non-instance methods for Actor activity
+
+    """
+
+    @staticmethod
+    def by_surname(match):
+        """Convienence method for finding by last name/surname
+
+        :param match: the last name to match against
+
+        All of the names are in all caps in the database, so we upper the match
+        string by default
+
+        """
+        return Actor.query.\
+                     filter(Actor.last_name == match.upper()).\
+                     order_by(Actor.last_name).\
+                     all()
+
+
 """
-Language 
+Language
 
 Notice this is related to the Film
 

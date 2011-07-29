@@ -76,8 +76,9 @@ a. Display the actors full name via a single method
 """
 Homework:
 
-Add an ActorMgr class that can find Actors by first name, last name, or a
-partial character search (e.g. actors with 'rod' in the first or last name)
+Add to the ActorMgr class a method that can find Actors by first name, last
+name, or a partial character search (e.g. actors with 'rod' anywhere in the
+first or last name)
 """
 
 
