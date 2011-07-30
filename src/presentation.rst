@@ -651,7 +651,6 @@ Relations: Organizing
 
         @staticmethod
         def get_students(since=None):
-            ...
 
         @staticmethod
         def find(email=None):
@@ -1003,6 +1002,16 @@ Homework! Demo directory
 
    Transition Dissolve 1
    PageBreak
+
+Homework! Git repository
+=========================
+https://github.com/mitechie/sqlalchemy_pyohio2011
+
+.. raw:: pdf
+
+   Transition Dissolve 1
+   PageBreak
+
 
 
 Reading Notes/Material
