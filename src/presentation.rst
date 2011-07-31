@@ -258,7 +258,9 @@ Python code works
 
     filter_on = 'username'
     filter_val = 'rick'
-    User.query.filter(getattr(User, filter_on) == filter_val).first()
+    User.query.\
+         filter(getattr(User, filter_on) == filter_val).\
+         first()
 
 .. raw:: pdf
 
@@ -275,7 +277,7 @@ engine == window to connection pool* and dialect* for your db
 .. code-block:: python
 
     from sqlalchemy import create_engine
-    engine = create_engine('postgresql://rick:passwd@localhost:5432/sa_demo')
+    engine = create_engine('postgresql://rick:pwd@local/demo')
 
     result = engine.execute("select username from users")
     for row in result:
@@ -291,7 +293,10 @@ Session: ever read Patterns?
 ===================================
 Unit of Work?
 
-    A Unit of Work keeps track of everything you do during a business transaction that can affect the database. When you're done, it figures out everything that needs to be done to alter the database as a result of your work.
+    A Unit of Work keeps track of everything you do during a business
+    transaction that can affect the database. When you're done, it
+    figures out everything that needs to be done to alter the database
+    as a result of your work.
 
 http://martinfowler.com/eaaCatalog/unitOfWork.html
 
@@ -383,7 +388,8 @@ Reminder of our object
         fullname = Column(Unicode)
         age = Column(Integer, default=10)
         bio = Column(UnicodeText)
-        registered = Column(DateTime, default=datetime.now)
+        registered = Column(DateTime,
+                            default=datetime.now)
 
 .. raw:: pdf
 
@@ -428,7 +434,8 @@ Chainable clauses, printable
     User.query.filter(User.username.in_('rick', 'bob')).\
                filter(User.bio.contains('science'))
 
-    User.query.filter(or_(User.username == 'rick', User.username == 'bob'))
+    User.query.filter(or_(User.username == 'rick',
+                          User.username == 'bob'))
 
 
 .. raw:: pdf
@@ -599,7 +606,8 @@ Relations: the mighty join
 
 .. code-block:: python
 
-    User.query.join(User.email).filter(Email.addr.endswith('@google.com'))
+    User.query.join(User.email).\
+         filter(Email.addr.endswith('@google.com'))
 
     SELECT * FROM users, emails
     WHERE users.id = emails.user_id AND
@@ -657,7 +665,8 @@ Relations: Organizing
             qry = User.query
 
             if email:
-                qry = qry.join(User.email).options(contains_eager(User.email))
+                qry = qry.join(User.email).\
+                          options(contains_eager(User.email))
                 qry = qry.filter(email)
 
             return qry.all()
@@ -696,7 +705,8 @@ Relations: I can haz more?
 
         id = Column(Integer, primary_key=True)
         user_id = Column(Integer, ForeignKey('users.id'))
-        number = Column(String(10), unique=True, nullable=False)
+        number = Column(String(10), unique=True,
+                        nullable=False)
 
     class User(Base):
 
@@ -718,7 +728,8 @@ Relations: querying multiple
             qry = User.query
 
             if email:
-                qry = qry.join(User.email).options(contains_eager(User.email))
+                qry = qry.join(User.email).\
+                          options(contains_eager(User.email))
                 qry = qry.filter(email)
 
             if phone:
@@ -822,7 +833,8 @@ Other tricks: autoload
 
 .. code-block:: python
 
-    # does a query against the database at load time to load the columns
+    # does a query against the database at load time to
+    # load the columns
     users_table = Table('users', meta, autoload=True)
 
     class User(object):
@@ -863,7 +875,7 @@ Other tricks: fitting to an existing db
     create table Users (
         UserID INTEGER,
         UserFirstName CHAR(20),
-        UserLastName CHAR(40) 
+        UserLastName CHAR(40)
     )
 
     class User(Base):
@@ -891,8 +903,8 @@ Other tricks: Events!
     from sqlalchemy import event
 
     def my_before_insert_listener(mapper, connection, target):
-        # before we insert our record, let's say what server did this insert to
-        # the db
+        # before we insert our record, let's say what server did
+        # this insert to the db
         target.inserted_from = gethostname()
 
     event.listen(User, 'before_insert', my_before_insert_listener)
@@ -933,8 +945,9 @@ Other tricks: Python properties
         def _get_password(self):
             return self._password
 
-        password = synonym('_password', descriptor=property(_get_password,
-                                                            _set_password))
+        password = synonym('_password',
+                           descriptor=property(_get_password,
+                                               _set_password))
 .. raw:: pdf
 
    Transition Dissolve 1
@@ -954,7 +967,9 @@ Let's show off something complicated
         JOIN tags ON bmark_tags.tag_id = tags.tid
         WHERE bmark_id IN (
             SELECT bmark_id FROM bmark_tags WHERE tag_id IN (
-                SELECT DISTINCT(t.tid) FROM tags t WHERE t.name in ('vagrant', 'tips')
+                SELECT DISTINCT(t.tid)
+                    FROM tags t
+                    WHERE t.name in ('vagrant', 'tips')
             )
         )
         AND tags.name LIKE ('ub%');
@@ -970,15 +985,16 @@ Show Off: cont'd
 .. code-block:: python
 
     current_tags = Session.query(Tag.tid).\
-                                   filter(Tag.name.in_(current)).group_by(Tag.tid)
+                                   filter(Tag.name.in_(current)).\
+                                   group_by(Tag.tid)
 
     good_bmarks = select([bmarks_tags.c.bmark_id],
-                         bmarks_tags.c.tag_id.in_(current_tags)).\
-                         group_by(bmarks_tags.c.bmark_id).\
-                         having('COUNT(bmark_id) >= ' + str(len(current)))
+                     bmarks_tags.c.tag_id.in_(current_tags)).\
+                     group_by(bmarks_tags.c.bmark_id).\
+                     having('COUNT(bmark_id) >= ' + str(len(current)))
 
     query = Session.query(Tag.name.distinct().label('name')).\
-                      join((bmarks_tags, bmarks_tags.c.tag_id == Tag.tid))
+              join((bmarks_tags, bmarks_tags.c.tag_id == Tag.tid))
     query = query.filter(bmarks_tags.c.bmark_id.in_(good_bmarks))
     query = query.filter(Tag.name.startswith(prefix))
 
@@ -993,7 +1009,7 @@ Show Off: cont'd
 Homework! Demo directory
 ===================================
 - sample database movies.db (sqlite)
-- sakila-schema.sql - schema def (stolen from MySQL sample code thanks!)
+- sakila-schema.sql - schema def (stolen from MySQL thanks!)
 - models.py - all the SqlAlchemy definitions
 - homework.py - comment blocks, each with an assignment
 - test.py (ignore, no answers within)
